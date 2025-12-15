@@ -45,38 +45,30 @@ pub struct SendToVault<'info> {
 }
 
 pub fn send_from_wallet_a_to_vault(ctx: &Context<SendToVault>) -> Result<()> {
+    if ctx.accounts.wallet_a_token_account.amount < ctx.accounts.wallet_a.received {
+        return Err(error!(ErrorCode::SlippageError));
+    }
+
+    let profit = ctx.accounts.wallet_a_token_account.amount - ctx.accounts.wallet_a.received;
+
+    if profit < ctx.accounts.wallet_a.min_profit {
+        return Err(error!(ErrorCode::MinProfitError));
+    }
+
+
     let seeds = &[
         b"wallet_seed_a",
         ctx.accounts.vault.to_account_info().key.as_ref(),
+        &[ctx.accounts.wallet_a.bump],
     ];
     let signer_seeds = [&seeds[..]];
     transfer_token_pda(
         &ctx.accounts.wallet_a_token_account,
         &ctx.accounts.vault_token_account,
-        ctx.accounts.wallet_a.amount,
+        ctx.accounts.wallet_a_token_account.amount,
         &ctx.accounts.token_mint,
         &ctx.accounts.wallet_a,
         &ctx.accounts.token_program,
         &signer_seeds,
     )
-}
-
-pub fn save_finish_data(ctx: Context<SendToVault>) -> Result<()> {
-    if ctx.accounts.wallet_a.amount < ctx.accounts.wallet_a.received {
-        return Err(error!(ErrorCode::SlippageError));
-    }
-
-    let profit = ctx.accounts.wallet_a.amount - ctx.accounts.wallet_a.received;
-
-    if profit < ctx.accounts.wallet_a.min_profit {
-        return Err(error!(ErrorCode::MinProfitError));
-    } else {
-        ctx.accounts.wallet_a.set_inner(Wallet {
-            amount: 0,
-            received: 0,
-            min_profit: 0,
-        })
-    };
-
-    Ok(())
 }

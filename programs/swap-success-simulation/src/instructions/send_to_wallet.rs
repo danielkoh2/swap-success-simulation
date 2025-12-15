@@ -59,9 +59,9 @@ pub fn send_from_vault_to_wallet(ctx: &Context<SendToWallet>, amount: u64) -> Re
 
 pub fn save_init_data(ctx: Context<SendToWallet>, amount: u64, min_profit: u64) -> Result<()> {
     ctx.accounts.wallet_a.set_inner(Wallet {
-        amount,
         received: amount,
         min_profit,
+        bump: ctx.bumps.wallet_a,
     });
 
     Ok(())
