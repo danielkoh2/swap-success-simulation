@@ -18,12 +18,10 @@ pub mod swap_success_simulation {
     }
     
     pub fn swap_simulate(ctx: Context<SwapSimulate>, success: bool) -> Result<()> {
-        instructions::swap_simulate::send_from_b_to_a(&ctx, success)?;
-        instructions::swap_simulate::save_simulate_data(ctx, success)
+        instructions::swap_simulate::send_from_b_to_a(&ctx, success)
     }
     
     pub fn send_to_vault(ctx: Context<SendToVault>) -> Result<()> {
-        instructions::send_to_vault::send_from_wallet_a_to_vault(&ctx)?;
-        instructions::send_to_vault::save_finish_data(ctx)
+        instructions::send_to_vault::send_from_wallet_a_to_vault(&ctx)
     }
 }

@@ -43,7 +43,7 @@ pub fn transfer_token_pda<'info>(
     let cpi_context = CpiContext::new_with_signer(
         token_program.to_account_info(),
         transfer_accounts,
-        seeds,
+        &seeds,
     );
 
     transfer_checked(cpi_context, amount, mint.decimals)
