@@ -86,8 +86,8 @@ describe("swap-success-simulation", () => {
 
   it("Swap success simulate", async ()=>{
     const input_amount = new BN(1_000_000_000)
-    // const min_profit = new BN(10_000_000)
-    const min_profit = new BN(1_000_000_000)
+    const min_profit = new BN(10_000_000)
+    // const min_profit = new BN(1_000_000_000)
     accounts.walletA = PublicKey.findProgramAddressSync(
         [
           Buffer.from("wallet_seed_a"),
